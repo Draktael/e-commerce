@@ -12,4 +12,5 @@ urlpatterns = [
     path('orders/', OrderListAPIView.as_view(), name='order-list'),            # opcional
     path('orders/<int:pk>/', OrderDetailAPIView.as_view(), name='order-detail'),
     path('checkout/<int:cart_id>/', CreateCheckoutSessionAPIView.as_view(), name='checkout-session'),
+    
 ]   
