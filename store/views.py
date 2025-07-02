@@ -1,4 +1,5 @@
 import stripe
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
@@ -9,9 +10,10 @@ from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Product, Cart, CartItem,Order
-from .serializers import ProductSerializer, CartSerializer, OrderSerializer
+from .serializers import ProductSerializer, CartSerializer, OrderSerializer, UserSerializer
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your views here.
@@ -156,3 +158,21 @@ class OrderListAPIView(ListAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+class RegisterUserAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email')
+
+        if not username or not password or not email:
+            return Response({"detail": "Faltan campos requeridos."}, status=400)
+
+        user = User.objects.create_user(username=username, password=password, email=email)
+        return Response({"detail": "Usuario creado exitosamente."}, status=201)
+
+class UserMeView(APIView):
+    permission_classes = [IsAuthenticated]  
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
