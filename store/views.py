@@ -174,5 +174,10 @@ class UserMeView(APIView):
     permission_classes = [IsAuthenticated]  
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+        print("USER:", request.user) # Debugging line to check user
+        print("IS AUTH:", request.user.is_authenticated)# Debugging line to check authentication status
+        return Response({
+            'id': request.user.id,
+            'username': request.user.username,
+            'email': request.user.email
+        })
