@@ -23,7 +23,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} x {self.Product.name}"
+        return f"{self.quantity} x {self.product.name}"
     
 class Order(models.Model):
     cart =models.OneToOneField(Cart, on_delete=models.CASCADE)
