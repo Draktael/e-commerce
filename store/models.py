@@ -12,10 +12,11 @@ class Product(models.Model):
         return self.name
     
 class Cart(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='carts', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"Cart {self.id}"
+        return f"Cart {self.id} de {self.user}"
     
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
@@ -26,9 +27,9 @@ class CartItem(models.Model):
         return f"{self.quantity} x {self.product.name}"
     
 class Order(models.Model):
-    cart =models.OneToOneField(Cart, on_delete=models.CASCADE)
+    cart = models.OneToOneField(Cart, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=10, decimal_places=2)
-    is_paid =models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

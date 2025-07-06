@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import ProductListAPIView, ProductDetailAPIView,CartCreateAPIView,AddToCartAPIView,UpdateCartItemAPIView,RemoveFromCartAPIView,CartRetrieveDeleteAPIView, OrderListAPIView,OrderDetailAPIView,CreateCheckoutSessionAPIView,RegisterUserAPIView, UserMeView
+from .views import ProductListAPIView, ProductDetailAPIView,CartCreateAPIView,AddToCartAPIView,UpdateCartItemAPIView,RemoveFromCartAPIView,CartRetrieveDeleteAPIView, OrderListAPIView,OrderDetailAPIView,CreateCheckoutSessionAPIView,RegisterUserAPIView, UserMeView, HistoryOrdersAPIView
 
 urlpatterns = [
     path('products/', ProductListAPIView.as_view(), name='product-list'),
@@ -17,4 +17,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterUserAPIView.as_view(), name='register-user'), # Ruta para el registro de usuarios
     path('me/', UserMeView.as_view(), name='user-me'),  # Ruta para obtener información del usuario autenticado
+    path('history-orders/', HistoryOrdersAPIView.as_view(), name='history-orders'),  # Ruta para obtener el historial de pedidos del usuario autenticado
 ]

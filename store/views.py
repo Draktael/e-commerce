@@ -27,8 +27,8 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
 
 class CartCreateAPIView(APIView):
-    def post(slef, request):
-        cart = Cart.objects.create()
+    def post(self, request):
+        cart = Cart.objects.create(user=request.user if request.user.is_authenticated else None)
         serializer = CartSerializer(cart)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
@@ -181,3 +181,13 @@ class UserMeView(APIView):
             'username': request.user.username,
             'email': request.user.email
         })
+
+class HistoryOrdersAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        orders = Order.objects.filter(cart__user=request.user)
+        if not orders:
+            return Response({"detail": "No se encontraron pedidos para este usuario."}, status=404)
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
