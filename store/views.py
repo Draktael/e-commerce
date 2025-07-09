@@ -26,13 +26,25 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+#Vista para crear carrito para usuarios no autenticados
 class CartCreateAPIView(APIView):
     def post(self, request):
-        cart = Cart.objects.create(user=request.user if request.user.is_authenticated else None)
+        cart = Cart.objects.create(user=request.user)
         serializer = CartSerializer(cart)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-    
+
+# Vista para crear carrito para usuarios autenticados
+class AuthenticatedCartCreateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            cart = Cart.objects.get(user=request.user)
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(user=request.user)
+        serializer = CartSerializer(cart)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 class CartRetrieveDeleteAPIView(APIView):
     def get(self, request, pk):
         cart = get_object_or_404(Cart, pk=pk)
@@ -93,7 +105,6 @@ class UpdateCartItemAPIView(APIView):
         item.save()
 
         return Response(CartSerializer(cart).data, status=200)
-
     
 class RemoveFromCartAPIView(APIView):
     def delete(self, request, cart_id):

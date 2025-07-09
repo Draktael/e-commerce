@@ -1,11 +1,12 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import ProductListAPIView, ProductDetailAPIView,CartCreateAPIView,AddToCartAPIView,UpdateCartItemAPIView,RemoveFromCartAPIView,CartRetrieveDeleteAPIView, OrderListAPIView,OrderDetailAPIView,CreateCheckoutSessionAPIView,RegisterUserAPIView, UserMeView, HistoryOrdersAPIView
+from .views import ProductListAPIView, ProductDetailAPIView,CartCreateAPIView,AddToCartAPIView,UpdateCartItemAPIView,RemoveFromCartAPIView,CartRetrieveDeleteAPIView, OrderListAPIView,OrderDetailAPIView,CreateCheckoutSessionAPIView,RegisterUserAPIView, UserMeView, HistoryOrdersAPIView, AuthenticatedCartCreateAPIView
 
 urlpatterns = [
     path('products/', ProductListAPIView.as_view(), name='product-list'),
     path('products/<int:pk>/',ProductDetailAPIView.as_view(), name='product-detail'),
     path('cart/create/', CartCreateAPIView.as_view(), name='cart-create'),
+    path('cart/authenticated/', AuthenticatedCartCreateAPIView.as_view(), name='authenticated-cart-create'),
     path('cart/<int:pk>/',CartRetrieveDeleteAPIView.as_view(), name='cart-retrieve-delete'),
     path('cart/<int:cart_id>/add/', AddToCartAPIView.as_view(), name='cart-add'),
     path('cart/<int:cart_id>/update/',UpdateCartItemAPIView.as_view(), name='cart-update'),
